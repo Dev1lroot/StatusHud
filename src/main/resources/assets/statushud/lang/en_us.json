@@ -1,0 +1,13 @@
+{
+  "itemGroup.statushud": "Example Mod Tab",
+  "block.statushud.example_block": "Example Block",
+  "item.statushud.example_item": "Example Item",
+
+  "statushud.configuration.title": "StatusHud Configs",
+  "statushud.configuration.section.statushud.common.toml": "StatusHud Configs",
+  "statushud.configuration.section.statushud.common.toml.title": "StatusHud Configs",
+  "statushud.configuration.items": "Item List",
+  "statushud.configuration.logDirtBlock": "Log Dirt Block",
+  "statushud.configuration.magicNumberIntroduction": "Magic Number Text",
+  "statushud.configuration.magicNumber": "Magic Number"
+}
