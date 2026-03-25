@@ -123,13 +123,12 @@ public class HudOverlay
         }
         else
         {
-            //TODO: FIX
-            //int clock_offset_x = 10;
-            //int clock_offset_y = 10;
+            int clock_offset_x = 10;
+            int clock_offset_y = 10;
 
             // Если мы смотрим не на моба то просто будем отображать дату и время в игре
-            //HudWriter writer = new HudWriter(graphics, minecraft.font, clock_offset_x + 6, clock_offset_y + 6, 10);
-            //writer.setColor(0xFFFFFFFF).write(HudUtils.getFormattedTime(minecraft) + " | Day: " + HudUtils.getGameDays(minecraft));
+            HudWriter writer = new HudWriter(graphics, minecraft.font, clock_offset_x + 6, clock_offset_y + 6, 10);
+            writer.setColor(0xFFFFFFFF).write(HudUtils.getFormattedTime(minecraft) + " | Day: " + HudUtils.getGameDays(minecraft));
         }
         if(HudUtils.getMainHandItemDurability() != -1) // Панель инструмента
         {

@@ -88,7 +88,7 @@ public class HudUtils
 
         // Игровой цикл: 24000 тиков = 24 часа. 1000 тиков = 1 час.
         // Смещение +6000 тиков, так как время 0 в MC — это 06:00.
-        long time = (mc.level.getGameTime() + 6000L) % 24000L;
+        long time = (mc.level.getOverworldClockTime() + 6000L) % 24000L;
         long hours = time / 1000L;
 
         // Минуты: остаток от часа (1000 тиков), переведенный в 60-минутный формат.
@@ -204,6 +204,7 @@ public class HudUtils
      */
     public static String getGameDays(Minecraft mc)
     {
+        //TODO: FIX
         if (mc.level == null)
         {
             return "0";
