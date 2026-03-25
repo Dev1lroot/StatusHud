@@ -9,9 +9,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 
 public class HudUtils
 {
+    /**
+     * Возвращает координаты игрока в мире в виде строки
+     */
     public static String getPlayerPos(LocalPlayer player)
     {
         return String.format("%d / %d / %d",
@@ -20,6 +25,51 @@ public class HudUtils
                 (int) Math.floor(player.getZ()));
     }
 
+    /**
+     * Возвращает название предмета в активной руке.
+     * Если рука пуста, возвращает пустую строку.
+     */
+    public static String getMainHandItemName() {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) {
+            return "";
+        }
+
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.isEmpty()) {
+            return "";
+        }
+
+        return stack.getHoverName().getString();
+    }
+
+    /**
+     * Возвращает оставшуюся прочность предмета в активной руке.
+     * Если предмет не ломается или рука пуста, возвращает -1.
+     */
+    public static int getMainHandItemDurability() {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) {
+            return -1;
+        }
+
+        ItemStack stack = player.getMainHandItem();
+
+        // Проверяем, пуст ли стек и может ли предмет вообще тратить прочность
+        if (stack.isEmpty() || !stack.isDamageableItem()) {
+            return -1;
+        }
+
+        // Вычисляем текущую прочность: Максимум - Текущий износ
+        return stack.getMaxDamage() - stack.getDamageValue();
+    }
+
+    /**
+     * Возвращает координаты игрока в чанке в виде строки
+     */
     public static String getPlayerChunkPos(LocalPlayer player)
     {
         return String.format("%d / %d / %d",
@@ -28,6 +78,9 @@ public class HudUtils
                 (int) Math.floor(player.getZ()) & 15);
     }
 
+    /**
+     * Возвращает текущее майнкрафтовское время в 24-х часовом формате
+     */
     public static String getFormattedTime(Minecraft mc)
     {
         // FAILSAFE
@@ -45,11 +98,17 @@ public class HudUtils
         return String.format("%02d:%02d", hours, minutes);
     }
 
+    /**
+     * Проверяет смотрим ли мы на сущность
+     */
     public static Boolean areWeTargetingAnEntity(Minecraft mc)
     {
         return (mc.hitResult instanceof EntityHitResult entityHit);
     }
 
+    /**
+     * Получает имя сущности
+     */
     public static String getTargetEntityName(Minecraft mc)
     {
         if (!(mc.hitResult instanceof EntityHitResult entityHit)) return "Unknown";
@@ -57,6 +116,9 @@ public class HudUtils
         return entity.getName().getString();
     }
 
+    /**
+     * Получает здоровье сущности
+     */
     public static float getTargetEntityHealthValue(Minecraft mc)
     {
         if (!(mc.hitResult instanceof EntityHitResult entityHit)) return 0;
@@ -64,13 +126,10 @@ public class HudUtils
         if (!(entity instanceof LivingEntity living)) return 0;
         return living.getHealth();
     }
-    public static LivingEntity getTargetEntity(Minecraft mc)
-    {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return null;
-        Entity entity = entityHit.getEntity();
-        if (!(entity instanceof LivingEntity living)) return null;
-        return living;
-    }
+
+    /**
+     * Получает максимальное здоровье сущности
+     */
     public static float getTargetEntityMaxHealthValue(Minecraft mc)
     {
         if (!(mc.hitResult instanceof EntityHitResult entityHit)) return 0;
@@ -79,22 +138,20 @@ public class HudUtils
         return living.getMaxHealth();
     }
 
-    public static String getTargetEntityHealth(Minecraft mc)
+    /**
+     * Получает сущность на которую мы смотрим (именно living)
+     */
+    public static LivingEntity getTargetEntity(Minecraft mc)
     {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return "";
-
+        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return null;
         Entity entity = entityHit.getEntity();
-
-        if (!(entity instanceof LivingEntity living)) return entity.getName().getString();
-
-        String name = living.getName().getString();
-        float health = living.getHealth();
-        float maxHealth = living.getMaxHealth();
-
-        // Формат: "15.0 / 20.0"
-        return String.format("%.1f / %.1f ❤", health, maxHealth);
+        if (!(entity instanceof LivingEntity living)) return null;
+        return living;
     }
 
+    /**
+     * Получает мировые координаты точки куда смотрит игрок
+     */
     public static String getTargetPos(Minecraft mc)
     {
         if (!(mc.hitResult instanceof BlockHitResult blockHit))
@@ -106,6 +163,9 @@ public class HudUtils
         return String.format("%d / %d / %d", pos.getX(), pos.getY(), pos.getZ());
     }
 
+    /**
+     * Получает координаты точки в чанке куда смотрит игрок
+     */
     public static String getTargetChunkPos(Minecraft mc)
     {
         if (!(mc.hitResult instanceof BlockHitResult blockHit))
@@ -117,6 +177,9 @@ public class HudUtils
         return String.format("%d / %d / %d", pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
     }
 
+    /**
+     * Получает компасное наименование стороны куда смотрит игрок
+     */
     public static String getFacing(LocalPlayer player)
     {
         float yaw = player.getYRot() % 360;
@@ -136,13 +199,20 @@ public class HudUtils
         return "Facing: SE";
     }
 
+    /**
+     * Получает игровые дни
+     */
     public static String getGameDays(Minecraft mc)
     {
         if (mc.level == null)
         {
-            return "Day: 0";
+            return "0";
         }
 
-        return "Day: " + (mc.level.getGameTime() / 24000L);
+        // Добавляем 6000 тиков, чтобы "сдвинуть" начало отсчета с 06:00 на 00:00.
+        // Теперь деление на 24000 даст смену дня ровно в полночь.
+        long totalTicksWithOffset = mc.level.getGameTime() + 6000L;
+
+        return "" + (totalTicksWithOffset / 24000L);
     }
 }

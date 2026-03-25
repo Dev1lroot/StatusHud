@@ -30,6 +30,9 @@ public class HudOverlay
     {
         Minecraft minecraft = Minecraft.getInstance();
 
+        int screenWidth = minecraft.getWindow().getGuiScaledWidth();
+        int screenHeight = minecraft.getWindow().getGuiScaledHeight();
+
         if (minecraft.options.hideGui)
         {
             return;
@@ -39,6 +42,12 @@ public class HudOverlay
         if (player == null)
         {
             return;
+        }
+
+        boolean isDebugOpen = Minecraft.getInstance().gui.getDebugOverlay().showDebugScreen();
+
+        if (isDebugOpen) {
+            return; // выключаем все если включено меню F3
         }
 
         if(HudUtils.areWeTargetingAnEntity(minecraft))
@@ -112,9 +121,31 @@ public class HudOverlay
             // Рисуем текст здоровья поверх полоски
             writer.setColor(0xFFFFFFFF).write(currentHealth + " / " + maxHealth).newLine();
         }
-        if(1 == 1) // потом какое-нибудь условие на отображение этой панели
+        else
         {
+            //TODO: FIX
+            //int clock_offset_x = 10;
+            //int clock_offset_y = 10;
 
+            // Если мы смотрим не на моба то просто будем отображать дату и время в игре
+            //HudWriter writer = new HudWriter(graphics, minecraft.font, clock_offset_x + 6, clock_offset_y + 6, 10);
+            //writer.setColor(0xFFFFFFFF).write(HudUtils.getFormattedTime(minecraft) + " | Day: " + HudUtils.getGameDays(minecraft));
+        }
+        if(HudUtils.getMainHandItemDurability() != -1) // Панель инструмента
+        {
+            int tool_menu_offset_x = 10;
+            int tool_menu_offset_y = screenHeight - 30;
+
+            // Если мы смотрим не на моба то просто будем отображать дату и время в игре
+            HudWriter writer = new HudWriter(graphics, minecraft.font, tool_menu_offset_x + 6, tool_menu_offset_y + 6, 10);
+            writer
+                    .setColor(0xFFFFFFFF)
+                    .write(HudUtils.getMainHandItemName())
+                    .newLine()
+                    .write(String.valueOf(HudUtils.getMainHandItemDurability()))
+                    .write(" | ")
+                    .setColor(0xFFFFFF00)
+                    .write("[ " + HudUtils.getTargetChunkPos(minecraft) + " ]");
         }
 
         // Используем цепочку вызовов
