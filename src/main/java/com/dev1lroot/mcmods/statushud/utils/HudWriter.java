@@ -1,4 +1,4 @@
-package com.dev1lroot.mcmods.statushud;
+package com.dev1lroot.mcmods.statushud.utils;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

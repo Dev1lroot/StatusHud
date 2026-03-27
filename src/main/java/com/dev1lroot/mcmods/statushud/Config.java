@@ -50,5 +50,13 @@ public class Config
                     "May not function as expected.")
             .define("sDateIndicatorMode", "game");
 
+    public static final ModConfigSpec.ConfigValue<String> sDurabilityIndicatorFormat = BUILDER
+            .comment("Allows you to set custom display format for armor, shield and tool durability",
+                    "- currently supported variables:",
+                    "    $iCurrentDurability - current durability of the item",
+                    "    $iMaxDurability - maximum durability of the item",
+                    "    $fCurrentDurabilityPercent - current durability in percents")
+            .define("sDurabilityIndicatorFormat", "$iCurrentDurability/$iMaxDurability ($fCurrentDurabilityPercent%)");
+
     static final ModConfigSpec SPEC = BUILDER.build();
 }

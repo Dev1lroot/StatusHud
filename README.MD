@@ -36,7 +36,7 @@ All features can be enabled / disabled / customized via the config file.
 | `bEnableTargetChunkPositionIndicator`  | Boolean | `true`  | Toggle coordinates of the targeted block.                                   |
 | `sTimeIndicatorMode`                   | String  | `game`  | WIP: Time source. Values: `real`, `game`. May not function as expected.      |
 | `sDateIndicatorMode`                   | String  | `game`  | WIP: Date source. Values: `real`, `game`. May not function as expected.      |
-
+| `sDurabilityIndicatorFormat`           | String  | `$iCurrentDurability/$iMaxDurability` | Allows user to set custom dispay text of item's durability using these three variables: `$iCurrentDurability` `$iMaxDurability` `$fCurrentDurabilityPercent`
 ---
 
 ### WIP stands for "Work In Progress"
@@ -71,9 +71,11 @@ See the `LICENSE` file for more details.
 
 ## Notes
 
-- This mod is purely client-side.
-- Designed to be minimalistic and non-intrusive.
-- Configuration is accessible via standard NeoForge config system.
+- This mod is entirely client-side.
+- Built to be minimalistic and non-intrusive, keeping your HUD clean.
+- Fully configurable through the standard NeoForge configuration system.
+- Inspired by classic mods such as Damage Indicators and Armor Status HUD, as well as many other discontinued or forgotten mods. 
+- This mod is an original creation and is not a fork or officially affiliated with any of them.
 
 ---
 

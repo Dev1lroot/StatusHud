@@ -1,5 +1,9 @@
-package com.dev1lroot.mcmods.statushud;
+package com.dev1lroot.mcmods.statushud.indicators;
 
+import com.dev1lroot.mcmods.statushud.Config;
+import com.dev1lroot.mcmods.statushud.utils.HudStringFormatter;
+import com.dev1lroot.mcmods.statushud.utils.HudUtils;
+import com.dev1lroot.mcmods.statushud.utils.HudWriter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
@@ -7,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DurabilityHud
+public class DurabilityIndicator
 {
     public static void render(GuiGraphicsExtractor graphics, Minecraft minecraft, int screenWidth, int screenHeight)
     {
@@ -51,8 +55,16 @@ public class DurabilityHud
         {
             int current = stack.getMaxDamage() - stack.getDamageValue();
             int max     = stack.getMaxDamage();
+            float percent = ((float)current / (float)max) * 100;
+
+            String label = new HudStringFormatter(Config.sDurabilityIndicatorFormat.get())
+                    .setVal("iCurrentDurability", current)
+                    .setVal("iMaxDurability", max)
+                    .setVal("fCurrentDurabilityPercent",String.format("%.2f", percent))
+                    .output();
+
             HudWriter writer = new HudWriter(graphics, minecraft.font, x + 20, y + 4, 10);
-            writer.setColor(getDurabilityColor(current, max)).write(current + " / " + max);
+            writer.setColor(getDurabilityColor(current, max)).write(label);
         }
     }
 

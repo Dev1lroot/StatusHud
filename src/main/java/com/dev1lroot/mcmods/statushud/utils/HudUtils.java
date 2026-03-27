@@ -1,17 +1,14 @@
-package com.dev1lroot.mcmods.statushud;
+package com.dev1lroot.mcmods.statushud.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
 
 public class HudUtils
 {

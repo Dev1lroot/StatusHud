@@ -1,19 +1,13 @@
-package com.dev1lroot.mcmods.statushud;
+package com.dev1lroot.mcmods.statushud.utils;
 
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -34,15 +28,11 @@ public class HudPainter
         return this;
     }
 
-    // Твой новый метод отрисовки моба для 26.1
     public HudPainter drawEntity(int x1, int y1, int x2, int y2, LivingEntity entity, float scale)
     {
-        if (entity == null)
-        {
-            return this;
-        }
+        if (entity == null) return this;
 
-        // 1. Извлекаем состояние рендера (как в твоем декомпиляте)
+        // 1. Извлекаем состояние рендера
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         EntityRenderer<? super LivingEntity, ?> renderer = dispatcher.getRenderer(entity);
         EntityRenderState state = renderer.createRenderState(entity, 1.0F);
