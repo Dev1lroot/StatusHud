@@ -33,24 +33,16 @@ public class HudOverlay
         int screenWidth = minecraft.getWindow().getGuiScaledWidth();
         int screenHeight = minecraft.getWindow().getGuiScaledHeight();
 
-        if (minecraft.options.hideGui)
-        {
-            return;
-        }
+        if (minecraft.options.hideGui) return;
 
         LocalPlayer player = minecraft.player;
-        if (player == null)
-        {
-            return;
-        }
+        if (player == null) return;
 
         boolean isDebugOpen = Minecraft.getInstance().gui.getDebugOverlay().showDebugScreen();
 
-        if (isDebugOpen) {
-            return; // выключаем все если включено меню F3
-        }
+        if (isDebugOpen) return; // выключаем все если включено меню F3
 
-        if(HudUtils.areWeTargetingAnEntity(minecraft))
+        if(Config.bEnableDamageIndicator.getAsBoolean() && HudUtils.areWeTargetingAnEntity(minecraft))
         {
             int damage_indicator_offset_x = 10;
             int damage_indicator_offset_y = 10;
@@ -121,56 +113,40 @@ public class HudOverlay
             // Рисуем текст здоровья поверх полоски
             writer.setColor(0xFFFFFFFF).write(currentHealth + " / " + maxHealth).newLine();
         }
-        else
+        else if(Config.bEnableTimeIndicator.getAsBoolean() || Config.bEnableDateIndicator.getAsBoolean())
         {
             int clock_offset_x = 10;
             int clock_offset_y = 10;
 
             // Если мы смотрим не на моба то просто будем отображать дату и время в игре
             HudWriter writer = new HudWriter(graphics, minecraft.font, clock_offset_x + 6, clock_offset_y + 6, 10);
-            writer.setColor(0xFFFFFFFF).write(HudUtils.getFormattedTime(minecraft) + " | Day: " + HudUtils.getGameDays(minecraft));
+            writer.setColor(0xFFFFFFFF);
+
+            // Отображаем только включенные режимы
+            if(Config.bEnableTimeIndicator.getAsBoolean()) writer.write(HudUtils.getFormattedTime(minecraft) + " "); // CRUTCH
+            if(Config.bEnableDateIndicator.getAsBoolean()) writer.write( "Day: " + HudUtils.getGameDays(minecraft));
         }
-        if(HudUtils.getMainHandItemDurability() != -1) // Панель инструмента
+        if(Config.bEnableToolDurabilityIndicator.getAsBoolean() || Config.bEnableToolTargetPositionIndicator.getAsBoolean()) // Панель инструмента
         {
             int tool_menu_offset_x = 10;
             int tool_menu_offset_y = screenHeight - 30;
 
-            // Если мы смотрим не на моба то просто будем отображать дату и время в игре
+            // Отображаем название предмета который у нас в руке
             HudWriter writer = new HudWriter(graphics, minecraft.font, tool_menu_offset_x + 6, tool_menu_offset_y + 6, 10);
-            writer
-                    .setColor(0xFFFFFFFF)
-                    .write(HudUtils.getMainHandItemName())
-                    .newLine()
-                    .write(String.valueOf(HudUtils.getMainHandItemDurability()))
-                    .write(" | ")
-                    .setColor(0xFFFFFF00)
-                    .write("[ " + HudUtils.getTargetChunkPos(minecraft) + " ]");
+            writer.setColor(0xFFFFFFFF).write(HudUtils.getMainHandItemName()).newLine();
+
+            // Если предмет имеет прочность и индикатор включен
+            if(HudUtils.getMainHandItemDurability() != -1 && Config.bEnableToolDurabilityIndicator.getAsBoolean())
+            {
+                writer.write(String.valueOf(HudUtils.getMainHandItemDurability()) + " / " + String.valueOf(HudUtils.getMainHandItemMaxDurability()) + " ");
+            }
+
+            // Если включено отображение позиции куда направлен инструмент/взгляд
+            if(Config.bEnableToolTargetPositionIndicator.getAsBoolean())
+            {
+                String pos = HudUtils.getTargetChunkPos(minecraft);
+                if(!pos.isEmpty()) writer.setColor(0xFFFFFF00).write("[ " + pos + " ]");
+            }
         }
-
-        // Используем цепочку вызовов
-//        writer.color(0xFF00FF00).write("PLAYER").newLine();
-//        writer.color(0xFF777777).write(" - WORLD POSITION:").color(0xFFFFFFFF).write(HudUtils.getPlayerPos(player)).newLine();
-//        writer.color(0xFF777777).write(" - CHUNK POSITION:").color(0xFFFFFFFF).write(HudUtils.getPlayerChunkPos(player)).newLine();
-//        writer.newLine();
-//        writer.color(0xFF00FF00).write("TARGET").newLine();
-//        writer.color(0xFF777777).write(" - WORLD POSITION:").color(0xFFFFFFFF).write(HudUtils.getTargetPos(minecraft)).newLine();
-//        writer.color(0xFF777777).write(" - CHUNK POSITION:").color(0xFFFFFFFF).write(HudUtils.getTargetChunkPos(minecraft)).newLine();
-//        writer.color(0xFF777777).write(" - INFO:").color(0xFFFFFFFF).write(HudUtils.getTargetEntityHealth(minecraft)).newLine();
-//        writer.newLine();
-//        writer.color(0xFF00FF00).write("WORLD").newLine();
-//        writer.color(0xFF777777).write(" - TIME:").color(0xFFFFFFFF).write(HudUtils.getFormattedTime(minecraft)).newLine();
-//        writer.color(0xFF777777).write(" - DATE:").color(0xFFFFFFFF).write(HudUtils.getGameDays(minecraft)).newLine();
-
-//        // Пример использования \n внутри строки
-//        writer.write(HudUtils.getTargetPos(minecraft) + "\n" + HudUtils.getTargetChunkPos(minecraft)).newLine();
-//
-//        writer.write(HudUtils.getFacing(player)).newLine();
-//        writer.write(HudUtils.getFormattedTime(minecraft)).newLine();
-//        writer.write(HudUtils.getGameDays(minecraft)).newLine();
-//
-//        // Пример смены цвета для здоровья
-//        writer.color(ARGB.opaque(0xFF5555))
-//                .write(HudUtils.getTargetEntityHealth(minecraft))
-//                .newLine();
     }
 }

@@ -1,42 +1,42 @@
 package com.dev1lroot.mcmods.statushud;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
-public class Config {
+public class Config
+{
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on common setup")
-            .define("logDirtBlock", true);
+    public static final ModConfigSpec.BooleanValue bEnableDamageIndicator = BUILDER
+            .comment("Toggle the damage indicator on the HUD.")
+            .define("bEnableDamageIndicator", true);
 
-    public static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
+    public static final ModConfigSpec.BooleanValue bEnableTimeIndicator = BUILDER
+            .comment("Toggle the time display on the HUD.")
+            .define("bEnableTimeIndicator", true);
 
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
+    public static final ModConfigSpec.BooleanValue bEnableDateIndicator = BUILDER
+            .comment("WORK IN PROGRESS: Toggle the date display on the HUD. May not function as expected.")
+            .define("bEnableDateIndicator", false);
 
-    // a list of strings that are treated as resource locations for items
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.BooleanValue bEnableToolDurabilityIndicator = BUILDER
+            .comment("Toggle the display for the current tool's remaining durability.")
+            .define("bEnableToolDurabilityIndicator", true);
+
+    public static final ModConfigSpec.BooleanValue bEnableToolTargetPositionIndicator = BUILDER
+            .comment("Toggle the display for the coordinates of the block you are looking at.")
+            .define("bEnableToolTargetPositionIndicator", true);
+
+    public static final ModConfigSpec.ConfigValue<String> sTimeIndicatorMode = BUILDER
+            .comment("WORK IN PROGRESS: Select the source for time display.",
+                    "Allowed values: 'real' (system clock), 'game' (in-game world time)",
+                    "May not function as expected.")
+            .define("sTimeIndicatorMode", "game");
+
+    public static final ModConfigSpec.ConfigValue<String> sDateIndicatorMode = BUILDER
+            .comment("WORK IN PROGRESS: Select the source for date display.",
+                    "Allowed values: 'real' (current calendar date), 'game' (in-game days passed)",
+                    "May not function as expected.")
+            .define("sDateIndicatorMode", "game");
 
     static final ModConfigSpec SPEC = BUILDER.build();
-
-    private static boolean validateItemName(final Object obj) {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(Identifier.parse(itemName));
-    }
 }

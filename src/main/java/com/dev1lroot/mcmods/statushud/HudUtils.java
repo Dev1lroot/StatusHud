@@ -68,6 +68,27 @@ public class HudUtils
     }
 
     /**
+     * Возвращает полную прочность предмета в активной руке.
+     * Если предмет не ломается или рука пуста, возвращает -1.
+     */
+    public static int getMainHandItemMaxDurability() {
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) {
+            return -1;
+        }
+
+        ItemStack stack = player.getMainHandItem();
+
+        // Проверяем, пуст ли стек и может ли предмет вообще тратить прочность
+        if (stack.isEmpty() || !stack.isDamageableItem()) {
+            return -1;
+        }
+
+        return stack.getMaxDamage();
+    }
+
+    /**
      * Возвращает координаты игрока в чанке в виде строки
      */
     public static String getPlayerChunkPos(LocalPlayer player)
