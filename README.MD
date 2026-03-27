@@ -85,5 +85,10 @@ See the `LICENSE` file for more details.
 
 ## Contributing
 
-Contributions, suggestions, and bug reports are welcome.  
-Feel free to open an issue or submit a pull request.
+StatusHUD is free and open source, everyone can fork or modify it, it is also open to your ideas and suggestions. If you have thoughts on new indicators or know how to make the current interface more intuitive, I am happy to receive any feedback. Even a small observation can help make the mod better, so please feel free to share your thoughts and creative concepts.
+
+You can help the project in various ways. If you find a bug or encounter an issue while running the mod, please create a ticket in the issues section.
+
+I am always available and ready to discuss the functionality. You can start a new discussion thread or report a problem directly through the repository. If you do not have a GitHub account or are not sure how to use it to submit your ideas, you can send them to modsuggestions@dev1lroot.com. 
+
+Let's build the ultimate, powerful and customizable HUD with all of the possible features together.

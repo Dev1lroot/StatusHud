@@ -40,7 +40,7 @@ authors="David Eichendorf"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-The mod simply adds currently visual menu for coordinates, time and days spent in game
+The mod simply adds Damage Indicators, Time and Date Indicators, Durability Indicators and more...
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
