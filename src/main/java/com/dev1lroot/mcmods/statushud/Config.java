@@ -18,13 +18,25 @@ public class Config
             .comment("WORK IN PROGRESS: Toggle the date display on the HUD. May not function as expected.")
             .define("bEnableDateIndicator", false);
 
+    public static final ModConfigSpec.BooleanValue bEnableDurabilityIndicator = BUILDER
+            .comment("Toggle the display for all of the durability indicators all together")
+            .define("bEnableArmorDurabilityIndicator", true);
+
+    public static final ModConfigSpec.BooleanValue bEnableArmorDurabilityIndicator = BUILDER
+            .comment("Toggle the display for the currently equipped armor's remaining durability.")
+            .define("bEnableArmorDurabilityIndicator", true);
+
+    public static final ModConfigSpec.BooleanValue bEnableShieldDurabilityIndicator = BUILDER
+            .comment("Toggle the display for the currently equipped shield's remaining durability.")
+            .define("bEnableShieldDurabilityIndicator", true);
+
     public static final ModConfigSpec.BooleanValue bEnableToolDurabilityIndicator = BUILDER
-            .comment("Toggle the display for the current tool's remaining durability.")
+            .comment("Toggle the display for the currently equipped tool's remaining durability.")
             .define("bEnableToolDurabilityIndicator", true);
 
-    public static final ModConfigSpec.BooleanValue bEnableToolTargetPositionIndicator = BUILDER
+    public static final ModConfigSpec.BooleanValue bEnableTargetChunkPositionIndicator = BUILDER
             .comment("Toggle the display for the coordinates of the block you are looking at.")
-            .define("bEnableToolTargetPositionIndicator", true);
+            .define("bEnableTargetChunkPositionIndicator", true);
 
     public static final ModConfigSpec.ConfigValue<String> sTimeIndicatorMode = BUILDER
             .comment("WORK IN PROGRESS: Select the source for time display.",

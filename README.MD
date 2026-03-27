@@ -9,14 +9,14 @@
 ## Features
 
 - Damage Indicator
-- Active Tool Durability Indicator 
+- Durability Indicator (Armor, Tool, Shield)
 
-![StatusHUD Preview](screenshots/2026-03-27_21.07.16.png)
+![StatusHUD Preview](screenshots/2026-03-27_22.24.44.png)
 
 - InGame Time Indicator
 - Target Position Indicator (chunk coordinates), very helpful for finding buried treasures.
 
-![StatusHUD Preview](screenshots/2026-03-27_21.08.16.png)
+![StatusHUD Preview](screenshots/2026-03-27_22.24.31.png)
 
 ## Configuration
 
@@ -24,19 +24,22 @@ All features can be enabled / disabled / customized via the config file.
 
 ### Available Options
 
-| Option | Description | Default |
-|------|------------|--------|
-| `bEnableDamageIndicator` | Toggle damage indicator | `true` |
-| `bEnableTimeIndicator` | Toggle time display | `true` |
-| `bEnableDateIndicator` | Toggle date display *(WIP)* | `false` |
-| `bEnableToolDurabilityIndicator` | Toggle tool durability display | `true` |
-| `bEnableToolTargetPositionIndicator` | Toggle target block position display | `true` |
-| `sTimeIndicatorMode` | Time source: `real` or `game` *(WIP)* | `game` |
-| `sDateIndicatorMode` | Date source: `real` or `game` *(WIP)* | `game` |
+| Key                                   | Type    | Default | Description                                                                 |
+|----------------------------------------|---------|---------|-----------------------------------------------------------------------------|
+| `bEnableDamageIndicator`               | Boolean | `true`  | Toggle the damage indicator on the HUD.                                     |
+| `bEnableTimeIndicator`                 | Boolean | `true`  | Toggle the time display on the HUD.                                         |
+| `bEnableDateIndicator`                 | Boolean | `false` | WORK IN PROGRESS: Toggle the date display on the HUD. May not function.     |
+| `bEnableDurabilityIndicator`           | Boolean | `true`  | Toggle all durability indicators at once.                                   |
+| `bEnableArmorDurabilityIndicator`      | Boolean | `true`  | Toggle equipped armor durability display.                                   |
+| `bEnableShieldDurabilityIndicator`     | Boolean | `true`  | Toggle equipped shield durability display.                                  |
+| `bEnableToolDurabilityIndicator`       | Boolean | `true`  | Toggle equipped tool durability display.                                    |
+| `bEnableTargetChunkPositionIndicator`  | Boolean | `true`  | Toggle coordinates of the targeted block.                                   |
+| `sTimeIndicatorMode`                   | String  | `game`  | WIP: Time source. Values: `real`, `game`. May not function as expected.      |
+| `sDateIndicatorMode`                   | String  | `game`  | WIP: Date source. Values: `real`, `game`. May not function as expected.      |
 
 ---
 
-## WIP stands for "Work In Progress"
+### WIP stands for "Work In Progress"
 
 Some features are still under development and may not work as expected:
 

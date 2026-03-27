@@ -124,29 +124,17 @@ public class HudOverlay
 
             // Отображаем только включенные режимы
             if(Config.bEnableTimeIndicator.getAsBoolean()) writer.write(HudUtils.getFormattedTime(minecraft) + " "); // CRUTCH
-            if(Config.bEnableDateIndicator.getAsBoolean()) writer.write( "Day: " + HudUtils.getGameDays(minecraft));
-        }
-        if(Config.bEnableToolDurabilityIndicator.getAsBoolean() || Config.bEnableToolTargetPositionIndicator.getAsBoolean()) // Панель инструмента
-        {
-            int tool_menu_offset_x = 10;
-            int tool_menu_offset_y = screenHeight - 30;
-
-            // Отображаем название предмета который у нас в руке
-            HudWriter writer = new HudWriter(graphics, minecraft.font, tool_menu_offset_x + 6, tool_menu_offset_y + 6, 10);
-            writer.setColor(0xFFFFFFFF).write(HudUtils.getMainHandItemName()).newLine();
-
-            // Если предмет имеет прочность и индикатор включен
-            if(HudUtils.getMainHandItemDurability() != -1 && Config.bEnableToolDurabilityIndicator.getAsBoolean())
-            {
-                writer.write(String.valueOf(HudUtils.getMainHandItemDurability()) + " / " + String.valueOf(HudUtils.getMainHandItemMaxDurability()) + " ");
-            }
-
-            // Если включено отображение позиции куда направлен инструмент/взгляд
-            if(Config.bEnableToolTargetPositionIndicator.getAsBoolean())
+            if(Config.bEnableDateIndicator.getAsBoolean()) writer.write( "Day: " + HudUtils.getGameDays(minecraft) + " ");
+            // Позиция цели отдельно, под всем остальным
+            if (Config.bEnableTargetChunkPositionIndicator.getAsBoolean())
             {
                 String pos = HudUtils.getTargetChunkPos(minecraft);
-                if(!pos.isEmpty()) writer.setColor(0xFFFFFF00).write("[ " + pos + " ]");
+                if (!pos.isEmpty()) writer.setColor(0xFFFFFF00).write("[ " + pos + " ]");
             }
+        }
+        if(Config.bEnableDurabilityIndicator.getAsBoolean()) // Панель инструмента
+        {
+            DurabilityHud.render(graphics, minecraft, screenWidth, screenHeight);
         }
     }
 }

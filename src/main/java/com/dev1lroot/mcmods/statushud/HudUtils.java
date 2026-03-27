@@ -3,6 +3,7 @@ package com.dev1lroot.mcmods.statushud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.client.Minecraft;
@@ -171,7 +172,46 @@ public class HudUtils
     }
 
     /**
-     * Получает мировые координаты точки куда смотрит игрок
+     * Получаем броню и щит
+     */
+    // Броня через getItemBySlot
+    public static ItemStack getHelmet() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.HEAD);
+    }
+
+    public static ItemStack getChestplate() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.CHEST);
+    }
+
+    public static ItemStack getLeggings() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.LEGS);
+    }
+
+    public static ItemStack getBoots() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.FEET);
+    }
+
+    public static ItemStack getOffHandItem() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.OFFHAND);
+    }
+    public static ItemStack getMainHandItem() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return ItemStack.EMPTY;
+        return mc.player.getItemBySlot(EquipmentSlot.MAINHAND);
+    }
+
+    /**
+     * Получает мировые координаты точки куда смотрит игрок (когда-нибудь вставим куда-то)
      */
     public static String getTargetPos(Minecraft mc)
     {
