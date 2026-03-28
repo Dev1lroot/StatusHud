@@ -10,17 +10,9 @@ public class Config
             .comment("Toggle the damage indicator on the HUD.")
             .define("bEnableDamageIndicator", true);
 
-    public static final ModConfigSpec.BooleanValue bEnableTimeIndicator = BUILDER
-            .comment("Toggle the time display on the HUD.")
-            .define("bEnableTimeIndicator", true);
-
-    public static final ModConfigSpec.BooleanValue bEnableDateIndicator = BUILDER
-            .comment("WORK IN PROGRESS: Toggle the date display on the HUD. May not function as expected.")
-            .define("bEnableDateIndicator", false);
-
     public static final ModConfigSpec.BooleanValue bEnableDurabilityIndicator = BUILDER
             .comment("Toggle the display for all of the durability indicators all together")
-            .define("bEnableArmorDurabilityIndicator", true);
+            .define("bEnableDurabilityIndicator", true);
 
     public static final ModConfigSpec.BooleanValue bEnableArmorDurabilityIndicator = BUILDER
             .comment("Toggle the display for the currently equipped armor's remaining durability.")
@@ -34,21 +26,26 @@ public class Config
             .comment("Toggle the display for the currently equipped tool's remaining durability.")
             .define("bEnableToolDurabilityIndicator", true);
 
-    public static final ModConfigSpec.BooleanValue bEnableTargetChunkPositionIndicator = BUILDER
-            .comment("Toggle the display for the coordinates of the block you are looking at.")
-            .define("bEnableTargetChunkPositionIndicator", true);
+    public static final ModConfigSpec.BooleanValue bEnableStatusIndicator = BUILDER
+            .comment("Toggle the display for the upper line of information")
+            .define("bEnableStatusIndicator", true);
 
-    public static final ModConfigSpec.ConfigValue<String> sTimeIndicatorMode = BUILDER
-            .comment("WORK IN PROGRESS: Select the source for time display.",
-                    "Allowed values: 'real' (system clock), 'game' (in-game world time)",
-                    "May not function as expected.")
-            .define("sTimeIndicatorMode", "game");
+    public static final ModConfigSpec.ConfigValue<Float> fDamageIndicatorRaycastDistance = BUILDER
+            .comment("Describes the distance the damage indicator is able to retrieve entity's information, default: 30, vanilla: 3")
+            .define("fDamageIndicatorRaycastDistance", 30.0F);
 
-    public static final ModConfigSpec.ConfigValue<String> sDateIndicatorMode = BUILDER
-            .comment("WORK IN PROGRESS: Select the source for date display.",
-                    "Allowed values: 'real' (current calendar date), 'game' (in-game days passed)",
-                    "May not function as expected.")
-            .define("sDateIndicatorMode", "game");
+    public static final ModConfigSpec.ConfigValue<String> sStatusIndicatorFormat = BUILDER
+            .comment("Allows you to set custom display format for the upper line of information",
+                    "- currently supported features:",
+                    "    \\n - new line",
+                    "    &AARRGGBB; - color code",
+                    "- currently supported variables:",
+                    "    $sGameTime24 - in-game day time in 24 hours format",
+                    "    $sGameTime12 - in-game day time in 12 hours format",
+                    "    $sPlayerName - player's name",
+                    "    $sPlayTime - real time played in the world in 1h 2m 3s format",
+                    "    $sTargetsChunkPosition - position of the block you are looking at in chunk coordinates")
+            .define("sStatusIndicatorFormat", "$sGameTime24 | &FF00FF00;$sPlayerName&FFFFFFFF; | $sPlayTime | &FFFFFF00;$sTargetsChunkPosition");
 
     public static final ModConfigSpec.ConfigValue<String> sDurabilityIndicatorFormat = BUILDER
             .comment("Allows you to set custom display format for armor, shield and tool durability",

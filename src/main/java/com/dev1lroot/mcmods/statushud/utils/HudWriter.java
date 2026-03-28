@@ -39,27 +39,74 @@ public class HudWriter
             return this;
         }
 
-        // Если в строке есть \n, разбиваем и рекурсивно пишем части
-        if (text.contains("\n"))
+        int i = 0;
+        int length = text.length();
+
+        StringBuilder buffer = new StringBuilder();
+
+        while (i < length)
         {
-            String[] lines = text.split("\n", -1);
-            for (int i = 0; i < lines.length; i++)
+            char c = text.charAt(i);
+
+            // Обработка \n
+            if (c == '\n')
             {
-                write(lines[i]);
-                if (i < lines.length - 1)
+                flush(buffer);
+                newLine();
+                i++;
+                continue;
+            }
+
+            // Обработка &AARRGGBB;
+            if (c == '&' && i + 10 <= length && text.charAt(i + 9) == ';')
+            {
+                String colorHex = text.substring(i + 1, i + 9);
+
+                if (isHex(colorHex))
                 {
-                    newLine();
+                    flush(buffer);
+
+                    int color = (int) Long.parseLong(colorHex, 16);
+                    setColor(color);
+
+                    i += 10; // пропускаем &AARRGGBB;
+                    continue;
                 }
             }
-            return this;
+
+            buffer.append(c);
+            i++;
         }
 
-        graphics.text(font, text, x, y, currentColor);
-
-        // Сдвигаем X на ширину отрисованного текста для следующей записи в ту же строку
-        this.x += font.width(text);
+        flush(buffer);
 
         return this;
+    }
+
+    private void flush(StringBuilder buffer)
+    {
+        if (buffer.length() == 0) return;
+
+        String str = buffer.toString();
+        graphics.text(font, str, x, y, currentColor);
+        x += font.width(str);
+
+        buffer.setLength(0);
+    }
+
+    private boolean isHex(String s)
+    {
+        for (int i = 0; i < s.length(); i++)
+        {
+            char c = s.charAt(i);
+            boolean hex =
+                    (c >= '0' && c <= '9') ||
+                            (c >= 'A' && c <= 'F') ||
+                            (c >= 'a' && c <= 'f');
+
+            if (!hex) return false;
+        }
+        return true;
     }
 
     public HudWriter newLine()

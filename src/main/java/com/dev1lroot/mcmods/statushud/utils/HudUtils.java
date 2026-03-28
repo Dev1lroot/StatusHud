@@ -4,11 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 public class HudUtils
 {
@@ -21,69 +25,6 @@ public class HudUtils
                 (int) Math.floor(player.getX()),
                 (int) Math.floor(player.getY()),
                 (int) Math.floor(player.getZ()));
-    }
-
-    /**
-     * Возвращает название предмета в активной руке.
-     * Если рука пуста, возвращает пустую строку.
-     */
-    public static String getMainHandItemName() {
-        LocalPlayer player = Minecraft.getInstance().player;
-
-        if (player == null) {
-            return "";
-        }
-
-        ItemStack stack = player.getMainHandItem();
-
-        if (stack.isEmpty()) {
-            return "";
-        }
-
-        return stack.getHoverName().getString();
-    }
-
-    /**
-     * Возвращает оставшуюся прочность предмета в активной руке.
-     * Если предмет не ломается или рука пуста, возвращает -1.
-     */
-    public static int getMainHandItemDurability() {
-        LocalPlayer player = Minecraft.getInstance().player;
-
-        if (player == null) {
-            return -1;
-        }
-
-        ItemStack stack = player.getMainHandItem();
-
-        // Проверяем, пуст ли стек и может ли предмет вообще тратить прочность
-        if (stack.isEmpty() || !stack.isDamageableItem()) {
-            return -1;
-        }
-
-        // Вычисляем текущую прочность: Максимум - Текущий износ
-        return stack.getMaxDamage() - stack.getDamageValue();
-    }
-
-    /**
-     * Возвращает полную прочность предмета в активной руке.
-     * Если предмет не ломается или рука пуста, возвращает -1.
-     */
-    public static int getMainHandItemMaxDurability() {
-        LocalPlayer player = Minecraft.getInstance().player;
-
-        if (player == null) {
-            return -1;
-        }
-
-        ItemStack stack = player.getMainHandItem();
-
-        // Проверяем, пуст ли стек и может ли предмет вообще тратить прочность
-        if (stack.isEmpty() || !stack.isDamageableItem()) {
-            return -1;
-        }
-
-        return stack.getMaxDamage();
     }
 
     /**
@@ -100,7 +41,7 @@ public class HudUtils
     /**
      * Возвращает текущее майнкрафтовское время в 24-х часовом формате
      */
-    public static String getFormattedTime(Minecraft mc)
+    public static String getFormattedTime24(Minecraft mc)
     {
         // FAILSAFE
         if (mc.level == null) return "00:00";
@@ -118,60 +59,72 @@ public class HudUtils
     }
 
     /**
-     * Проверяет смотрим ли мы на сущность
+     * Возвращает текущее майнкрафтовское время в 12-ти часовом формате
      */
-    public static Boolean areWeTargetingAnEntity(Minecraft mc)
+    public static String getFormattedTime12(Minecraft mc)
     {
-        return (mc.hitResult instanceof EntityHitResult entityHit);
+        String suffix = "AM";
+
+        // FAILSAFE
+        if (mc.level == null) return "00:00 " + suffix;
+
+        // Игровой цикл: 24000 тиков = 24 часа. 1000 тиков = 1 час.
+        // Смещение +6000 тиков, так как время 0 в MC — это 06:00.
+        long time = (mc.level.getOverworldClockTime() + 6000L) % 24000L;
+        long hours = time / 1000L;
+
+        // Минуты: остаток от часа (1000 тиков), переведенный в 60-минутный формат.
+        // (ticks % 1000) * 60 / 1000
+        long minutes = (time % 1000L) * 60L / 1000L;
+
+        // Я вообще не понимаю смысла от таких часов, но их чаще всего используют в странах целевой аудитории,
+        // поэтому придется добавить этот костыль,
+        // надеюсь никогда не придется добавлять мили и фаренгейт в игру
+        if(hours > 12)
+        {
+            hours = hours - 12;
+            suffix = "PM";
+        }
+        if(hours == 0)
+        {
+            hours = 12;
+            suffix = "PM";
+        }
+
+        return String.format("%02d:%02d", hours, minutes) + " " + suffix;
     }
 
-    /**
-     * Получает имя сущности
-     */
-    public static String getTargetEntityName(Minecraft mc)
+    public static Entity raycastTargetEntity(Minecraft mc, double range)
     {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return "Unknown";
-        Entity entity = entityHit.getEntity();
-        return entity.getName().getString();
-    }
+        if (mc.player == null || mc.level == null) return null;
 
-    /**
-     * Получает здоровье сущности
-     */
-    public static float getTargetEntityHealthValue(Minecraft mc)
-    {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return 0;
-        Entity entity = entityHit.getEntity();
-        if (!(entity instanceof LivingEntity living)) return 0;
-        return living.getHealth();
-    }
+        Entity camera = mc.getCameraEntity();
+        if (camera == null) return null;
 
-    /**
-     * Получает максимальное здоровье сущности
-     */
-    public static float getTargetEntityMaxHealthValue(Minecraft mc)
-    {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return 0;
-        Entity entity = entityHit.getEntity();
-        if (!(entity instanceof LivingEntity living)) return 0;
-        return living.getMaxHealth();
-    }
+        Vec3 eyePos = camera.getEyePosition(1.0F);
+        Vec3 lookVec = camera.getViewVector(1.0F);
+        Vec3 reachVec = eyePos.add(lookVec.scale(range));
 
-    /**
-     * Получает сущность на которую мы смотрим (именно living)
-     */
-    public static LivingEntity getTargetEntity(Minecraft mc)
-    {
-        if (!(mc.hitResult instanceof EntityHitResult entityHit)) return null;
-        Entity entity = entityHit.getEntity();
-        if (!(entity instanceof LivingEntity living)) return null;
-        return living;
+        AABB searchBox = camera.getBoundingBox()
+                .expandTowards(lookVec.scale(range))
+                .inflate(1.0D);
+
+        EntityHitResult result = ProjectileUtil.getEntityHitResult(
+                mc.level,
+                camera,
+                eyePos,
+                reachVec,
+                searchBox,
+                entity -> !entity.isSpectator() && entity.isPickable() && entity != camera,
+                0.3F
+        );
+
+        return result != null ? result.getEntity() : null;
     }
 
     /**
      * Получаем броню и щит
      */
-    // Броня через getItemBySlot
     public static ItemStack getHelmet() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return ItemStack.EMPTY;
@@ -228,7 +181,7 @@ public class HudUtils
     {
         if (!(mc.hitResult instanceof BlockHitResult blockHit))
         {
-            return "";
+            return "~ / ~ / ~";
         }
 
         BlockPos pos = blockHit.getBlockPos();
@@ -258,20 +211,44 @@ public class HudUtils
     }
 
     /**
-     * Получает игровые дни
+     * Returns total real-time play time in format: Xh Ym Zs.
+     *
+     * - Hides hours if 0
+     * - Hides minutes if 0
+     * - Always shows seconds
+     *
+     * Uses total world time (ticks). 20 ticks = 1 second.
+     * Returns "0s" if world is not loaded.
      */
-    public static String getGameDays(Minecraft mc)
+    public static String getPlayTime(Minecraft mc)
     {
-        //TODO: FIX
         if (mc.level == null)
         {
-            return "0";
+            return "0s";
         }
 
-        // Добавляем 6000 тиков, чтобы "сдвинуть" начало отсчета с 06:00 на 00:00.
-        // Теперь деление на 24000 даст смену дня ровно в полночь.
-        long totalTicksWithOffset = mc.level.getGameTime() + 6000L;
+        long ticks = mc.level.getGameTime();
+        long totalSeconds = ticks / 20;
 
-        return "" + (totalTicksWithOffset / 24000L);
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        StringBuilder result = new StringBuilder();
+
+        if (hours > 0)
+        {
+            result.append(hours).append("h ");
+        }
+
+        if (minutes > 0)
+        {
+            result.append(minutes).append("m ");
+        }
+
+        // секунды показываем всегда
+        result.append(seconds).append("s");
+
+        return result.toString();
     }
 }

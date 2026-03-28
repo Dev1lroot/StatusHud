@@ -46,7 +46,8 @@ public class HudPainter
         // Если это живое существо, подправим углы
         if (state instanceof LivingEntityRenderState livingState)
         {
-            livingState.bodyRot = 180.0F;
+            livingState.bodyRot = 45.0F - 180.0F;
+            livingState.y = 0F;
             livingState.yRot = 0.0F;
             livingState.xRot = 0.0F;
         }

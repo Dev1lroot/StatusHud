@@ -22,32 +22,40 @@
 
 All features can be enabled / disabled / customized via the config file.
 
-### Available Options
+### General Options
 
-| Key                                   | Type    | Default | Description                                                                 |
-|----------------------------------------|---------|---------|-----------------------------------------------------------------------------|
-| `bEnableDamageIndicator`               | Boolean | `true`  | Toggle the damage indicator on the HUD.                                     |
-| `bEnableTimeIndicator`                 | Boolean | `true`  | Toggle the time display on the HUD.                                         |
-| `bEnableDateIndicator`                 | Boolean | `false` | WORK IN PROGRESS: Toggle the date display on the HUD. May not function.     |
-| `bEnableDurabilityIndicator`           | Boolean | `true`  | Toggle all durability indicators at once.                                   |
-| `bEnableArmorDurabilityIndicator`      | Boolean | `true`  | Toggle equipped armor durability display.                                   |
-| `bEnableShieldDurabilityIndicator`     | Boolean | `true`  | Toggle equipped shield durability display.                                  |
-| `bEnableToolDurabilityIndicator`       | Boolean | `true`  | Toggle equipped tool durability display.                                    |
-| `bEnableTargetChunkPositionIndicator`  | Boolean | `true`  | Toggle coordinates of the targeted block.                                   |
-| `sTimeIndicatorMode`                   | String  | `game`  | WIP: Time source. Values: `real`, `game`. May not function as expected.      |
-| `sDateIndicatorMode`                   | String  | `game`  | WIP: Date source. Values: `real`, `game`. May not function as expected.      |
-| `sDurabilityIndicatorFormat`           | String  | `$iCurrentDurability/$iMaxDurability` | Allows user to set custom dispay text of item's durability using these three variables: `$iCurrentDurability` `$iMaxDurability` `$fCurrentDurabilityPercent`
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `bEnableDamageIndicator` | Boolean | `true` | Enables or disables the damage indicator on the HUD. |
+| `bEnableDurabilityIndicator` | Boolean | `true` | Enables or disables the display of all durability indicators together. |
+| `bEnableArmorDurabilityIndicator` | Boolean | `true` | Enables or disables the display of the currently equipped armor's remaining durability. |
+| `bEnableShieldDurabilityIndicator` | Boolean | `true` | Enables or disables the display of the currently equipped shield's remaining durability. |
+| `bEnableToolDurabilityIndicator` | Boolean | `true` | Enables or disables the display of the currently equipped tool's remaining durability. |
+| `bEnableStatusIndicator` | Boolean | `true` | Enables or disables the display of the upper status line on the HUD. |
+
 ---
 
-### WIP stands for "Work In Progress"
+### Damage Indicator
 
-Some features are still under development and may not work as expected:
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `fDamageIndicatorRaycastDistance` | Float | `30.0` | Sets the maximum distance (in blocks) at which the damage indicator can detect entities. Vanilla distance is 3. |
 
-- Date Indicator
-- Time mode switching
-- Date mode switching
+---
 
-Expect bugs or incomplete behavior in these areas.
+### Status Indicator Format
+
+| Option                            | Type | Default                                                                                              | Description                                                                                                                                                                                                                                                                                                                                                                         |
+|-----------------------------------|------|------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sStatusIndicatorFormat` | String | `$sGameTime24 \| &FF00FF00;$sPlayerName&FFFFFFFF; \| $sPlayTime \| &FFFFFF00;$sTargetsChunkPosition` | Custom format for the upper HUD line. Supports new lines (`\n`), ARGB color codes (`&AARRGGBB;`) and variables: <br>• `$sGameTime24` → in-game time (24h) <br>• `$sGameTime12` → in-game time (12h) <br>• `$sPlayerName` → player’s name <br>• `$sPlayTime` → real time played in world <br>• `$sTargetsChunkPosition` → position the block you are looking at in chunk coordinates |
+
+---
+
+### Durability Indicator Format
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `sDurabilityIndicatorFormat` | String | `$iCurrentDurability/$iMaxDurability ($fCurrentDurabilityPercent%)` | Custom format for armor, shield, and tool durability. Supports variables: <br>• `$iCurrentDurability` → current durability <br>• `$iMaxDurability` → maximum durability <br>• `$fCurrentDurabilityPercent` → durability percentage |
 
 ---
 

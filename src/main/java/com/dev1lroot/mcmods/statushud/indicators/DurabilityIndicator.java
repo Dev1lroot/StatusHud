@@ -15,6 +15,9 @@ public class DurabilityIndicator
 {
     public static void render(GuiGraphicsExtractor graphics, Minecraft minecraft, int screenWidth, int screenHeight)
     {
+        // Главный параметр для включения и выключения этой панели
+        if(!Config.bEnableDurabilityIndicator.getAsBoolean()) return;
+
         // Эта панель очень херово смотриться если открыт чат, поэтому её нужно прятать
         if (minecraft.gui.getChat().isChatFocused()) return;
 
