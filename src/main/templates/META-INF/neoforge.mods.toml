@@ -40,7 +40,7 @@ authors="David Eichendorf"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-The mod simply adds Damage Indicators, Time and Date Indicators, Durability Indicators and more...
+Minecraft 26.1+ Damage Indicators, Armor Durability and more... 
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
